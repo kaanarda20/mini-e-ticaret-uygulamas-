@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <head><meta charset="utf-8" /><title>Sepet</title></head>
+  <body>
+    <h1>Sepet</h1>
+    <a href="/">Ürünlere dön</a>
+    <ul>
+      {% for key, item in cart.items %}
+        <li>
+          {{ item.name }}{% if item.variant_name %} ({{ item.variant_name }}){% endif %} — {{ item.price }} TL × {{ item.quantity }}
+        </li>
+      {% empty %}
+        <li>Sepet boş.</li>
+      {% endfor %}
+    </ul>
+    <p>Toplam: {{ total }} TL</p>
+    <form method="post" action="/checkout/">
+      {% csrf_token %}
+      <button type="submit">Ödeme (Mock)</button>
+    </form>
+  </body>
+</html>

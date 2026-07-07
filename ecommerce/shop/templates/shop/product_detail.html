@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ product.name }}</title>
+  </head>
+  <body>
+    <a href="/">Geri</a>
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.description }}</p>
+    <div>
+      {% if product.images.all %}
+        {% for img in product.images.all %}
+          <img src="{{ img.image.url }}" alt="{{ img.alt }}" style="height:140px;margin-right:6px" />
+        {% endfor %}
+      {% elif product.image %}
+        <img src="{{ product.image.url }}" style="height:140px" />
+      {% endif %}
+    </div>
+    <p>Fiyat: {{ product.price }} TL</p>
+    {% if product.variants.all %}
+      <form method="post" action="/add/{{ product.id }}/">
+        {% csrf_token %}
+        <label>Varyant:</label>
+        <select name="variant_id">
+          {% for v in product.variants.all %}
+            <option value="{{ v.id }}">{{ v.name }} {% if v.additional_price %}(+{{ v.additional_price }}){% endif %}</option>
+          {% endfor %}
+        </select>
+        <input type="number" name="quantity" value="1" min="1" />
+        <button type="submit">Sepete Ekle</button>
+      </form>
+    {% else %}
+      <form method="post" action="/add/{{ product.id }}/">
+        {% csrf_token %}
+        <input type="number" name="quantity" value="1" min="1" />
+        <button type="submit">Sepete Ekle</button>
+      </form>
+    {% endif %}
+  </body>
+</html>

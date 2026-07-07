@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Ürünler</title>
+  </head>
+  <body>
+    <h1>Ürünler</h1>
+    <a href="/cart/">Sepete Git</a>
+    <ul>
+      {% for p in products %}
+        <li>
+          {% if p.image %}
+            <img src="{{ p.image.url }}" alt="{{ p.name }}" style="height:80px;vertical-align:middle;margin-right:8px" />
+          {% elif p.images.all %}
+            {% with img=p.images.all.0 %}
+              <img src="{{ img.image.url }}" alt="{{ p.name }}" style="height:80px;vertical-align:middle;margin-right:8px" />
+            {% endwith %}
+          {% endif %}
+          <strong><a href="{% url 'product_detail' p.id %}">{{ p.name }}</a></strong>
+          {% if p.category %} - <em>{{ p.category.name }}</em>{% endif %} — {{ p.price }} TL
+          <form action="/add/{{ p.id }}/" method="post" style="display:inline">
+            {% csrf_token %}
+            <input type="number" name="quantity" value="1" min="1" style="width:60px" />
+            <button type="submit">Sepete Ekle</button>
+          </form>
+        </li>
+      {% empty %}
+        <li>Ürün bulunamadı.</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
